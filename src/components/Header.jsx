@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
+import { connect } from 'react-redux'
 
-export default class Header extends Component {
+ class Header extends Component {
   render() {
+    const {tongSoLuong, tongTien} = this.props;
     return (
  <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
-  <NavLink className="navbar-brand" href="/">ReactJS</NavLink>
+  <NavLink className="navbar-brand" to="/">ReactJS</NavLink>
   <button className="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavId" aria-controls="collapsibleNavId" aria-expanded="false" aria-label="Toggle navigation" />
   <div className="collapse navbar-collapse" id="collapsibleNavId">
     <ul className="navbar-nav me-auto mt-2 mt-lg-0">
@@ -27,11 +29,26 @@ export default class Header extends Component {
         style={({isActive}) => isActive ? {border:'1px solid pink'} : {}}
         >React Form</NavLink>
       </li>
+      <li className="nav-item">
+        <NavLink className={({isActive}) => isActive ? "nav-link active" : "nav-link"} to="/react-life-cycle" 
+        style={({isActive}) => isActive ? {border:'1px solid pink'} : {}}
+        >React Life Cycle</NavLink>
+      </li>
+      <li className="nav-item dropdown">
+            <a className="nav-link dropdown-toggle" href="#" id="dropdownId" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Redux</a>
+            <div className="dropdown-menu" aria-labelledby="dropdownId">
+                <NavLink className="dropdown-item" to="/redux-change-number">Change number</NavLink>
+                <NavLink className="dropdown-item" to="/redux-change-car">Change car</NavLink>
+                <NavLink className="dropdown-item" to="/redux-change-font-size">Change FontSize</NavLink>
+
+            </div>
+        </li>
     
     </ul>
     <form className="d-flex my-2 my-lg-0">
-      <input className="form-control me-sm-2" type="text" placeholder="Search" />
-      <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      <NavLink to='/redux-gio-hang' className={'nav-link mx-5 text-white'}>
+      <i className='fa fa-3x fa-cart-plus'></i> ({tongSoLuong} - {tongTien.toLocaleString()})
+      </NavLink>
     </form>
   </div>
 </nav>
@@ -39,3 +56,21 @@ export default class Header extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => {
+   let {gioHang} = state.gioHangState;
+   let tongSoLuong = 0;
+   let tongTien = 0;
+   for (let spGH of gioHang) {
+    tongSoLuong += spGH.soLuong;
+    tongTien += spGH.soLuong * spGH.giaBan
+   }
+
+   //this.props = {tongSoLuong, tongTien}
+   return {
+      tongSoLuong,
+      tongTien
+   }
+
+}
+export default connect(mapStateToProps)(Header)
